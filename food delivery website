@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FeastFlow — Food Delivery (Dark)</title>
+<style>
+:root{
+  --bg:#07070a;
+  --panel:#0f1720;
+  --muted:#9aa6b2;
+  --accent1:#ff6b6b;
+  --accent2:#ffd166;
+  --accent3:#06b6d4;
+  --card: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);
+  color:#ecf2f8;padding:28px;-webkit-font-smoothing:antialiased;
+}
+.container{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:300px 1fr 360px;gap:20px;align-items:start}
+.sidebar{background:var(--panel);padding:18px;border-radius:var(--radius);position:sticky;top:28px}
+.logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent3));display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
+.h1{font-weight:700;font-size:18px}
+.input{background:transparent;border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:10px;color:inherit;width:100%}
+.btn{background:rgba(255,255,255,0.05);border:none;color:inherit;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+.filters{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.pill{background:rgba(255,255,255,0.08);padding:8px 12px;border-radius:999px;font-size:13px;cursor:pointer}
+.main{background:var(--card);padding:18px;border-radius:var(--radius)}
+.restaurant-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:var(--card);padding:12px;border-radius:12px}
+.rest-hero{height:110px;border-radius:10px;background:linear-gradient(90deg, rgba(255,107,107,0.12), rgba(6,182,212,0.08));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px}
+.menu-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.03)}
+.cart{background:var(--panel);padding:18px;border-radius:var(--radius);position:sticky;top:28px}
+.cart-list{max-height:420px;overflow:auto;margin-top:12px}
+.cart-item{display:flex;justify-content:space-between;gap:8px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.05);align-items:center}
+.total{font-weight:800;font-size:18px;margin-top:12px}
+@media (max-width:1000px){.container{grid-template-columns:1fr; padding:18px}.sidebar{position:relative;top:0}.cart{order:3}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="sidebar">
+    <div class="logo">FF</div>
+    <div class="h1">FeastFlow</div>
+    <input id="searchInput" class="input" placeholder="Search restaurants" />
+    <button id="searchBtn" class="btn">Search</button>
+    <div class="filters">
+      <div class="pill" data-filter="all">All</div>
+      <div class="pill" data-filter="pizza">Pizza</div>
+      <div class="pill" data-filter="burgers">Burgers</div>
+      <div class="pill" data-filter="sushi">Sushi</div>
+      <div class="pill" data-filter="dessert">Dessert</div>
+    </div>
+  </div>
+
+  <div class="main" id="main">
+    <h2>Restaurants</h2>
+    <div id="restaurantList" class="restaurant-list"></div>
+  </div>
+
+  <div class="cart" id="cart">
+    <h3>Your Cart (<span id="cartItemsCount">0</span>)</h3>
+    <div class="cart-list" id="cartList"></div>
+    <div class="total">Total: ₹ <span id="cartTotal">0</span></div>
+    <button id="checkoutBtn" class="btn">Checkout</button>
+    <button id="clearBtn" class="btn">Clear</button>
+  </div>
+</div>
+
+<script>
+const restaurants = [
+  {id:1,name:'Red Oven Pizza',tags:['pizza'],menu:[{name:'Margherita',price:249},{name:'Pepperoni',price:349}]},
+  {id:2,name:'Burger Hub',tags:['burgers'],menu:[{name:'Classic Beef',price:199},{name:'Crispy Fries',price:79}]},
+  {id:3,name:'Sushi Harbor',tags:['sushi'],menu:[{name:'California Roll',price:279},{name:'Salmon Sashimi',price:399}]},
+  {id:4,name:'Sweet Tooth',tags:['dessert'],menu:[{name:'Chocolate Cake',price:159},{name:'Vanilla Shake',price:129}]}
+];
+
+let cart=[];
+
+function renderRestaurants(filter='all'){
+  const list=document.getElementById('restaurantList');
+  list.innerHTML='';
+  let visible=restaurants.filter(r=>filter==='all'||r.tags.includes(filter));
+  visible.forEach(r=>{
+    const card=document.createElement('div');card.className='card';
+    card.innerHTML=`<div class="rest-hero">${r.name}</div><div>${r.tags.join(', ')}</div><button class="btn" onclick="openMenu(${r.id})">View Menu</button>`;
+    list.appendChild(card);
+  })
+}
+
+function openMenu(id){
+  const r=restaurants.find(x=>x.id===id);
+  let menuHTML='';
+  r.menu.forEach(item=>{
+    menuHTML+=`<div class="menu-item"><div>${item.name}</div><div>₹${item.price}</div><button class="btn" onclick="addToCart('${item.name}',${item.price})">Add</button></div>`;
+  })
+  document.getElementById('main').innerHTML=`<h2>${r.name} Menu</h2>${menuHTML}<button class="btn" onclick="renderRestaurants()">Back</button>`;
+}
+
+function addToCart(name,price){
+  const existing=cart.find(i=>i.name===name);
+  if(existing){existing.qty++}else{cart.push({name,price,qty:1})}
+  renderCart();
+}
+
+function renderCart(){
+  const list=document.getElementById('cartList');
+  list.innerHTML='';
+  let total=0;
+  cart.forEach(item=>{
+    total+=item.price*item.qty;
+    list.innerHTML+=`<div class="cart-item"><div>${item.qty}x ${item.name}</div><div>₹${item.price*item.qty}</div></div>`;
+  })
+  document.getElementById('cartItemsCount').innerText=cart.length;
+  document.getElementById('cartTotal').innerText=total;
+}
+
+document.querySelectorAll('.pill').forEach(b=>b.onclick=()=>renderRestaurants(b.dataset.filter));
+document.getElementById('searchBtn').onclick=()=>{
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const list=document.getElementById('restaurantList');
+  list.innerHTML='';
+  restaurants.filter(r=>r.name.toLowerCase().includes(q)).forEach(r=>{
+    const card=document.createElement('div');card.className='card';
+    card.innerHTML=`<div class="rest-hero">${r.name}</div><button class="btn" onclick="openMenu(${r.id})">View Menu</button>`;
+    list.appendChild(card);
+  })
+}
+document.getElementById('checkoutBtn').onclick=()=>alert('Checkout feature demo only');
+document.getElementById('clearBtn').onclick=()=>{cart=[];renderCart()};
+
+renderRestaurants();
+renderCart();
+</script>
+</body>
+</html>
