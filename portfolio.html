@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ashwini M | 3D Flip Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #2E2E2E; /* Charcoal Gray outer background */
+    color: #ffdede; /* Light coral text for readability */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 3rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    color: #ff6f61; /* Warm coral */
+  }
+
+  p.tagline {
+    font-weight: 400;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: #ffdede; /* Light coral */
+    text-align: center;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .flip-card {
+    perspective: 1500px;
+  }
+
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    transform-style: preserve-3d;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(255, 111, 97, 0.5); /* coral shadow */
+    cursor: pointer;
+  }
+
+  .flip-card:hover .flip-card-inner,
+  .flip-card:focus-within .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 25px;
+    box-sizing: border-box;
+  }
+
+  .flip-card-front {
+    background: linear-gradient(135deg, #00695c, #26a69a); /* teal gradient */
+    color: #ffdede; 
+  }
+
+  .flip-card-front img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #ff6f61; /* coral border */
+    margin-bottom: 20px;
+    object-fit: cover;
+    box-shadow: 0 0 12px #ff6f61aa;
+  }
+
+  .flip-card-front svg.icon {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+    fill: #ff6f61;
+  }
+
+  .flip-card-front h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+  }
+
+  .flip-card-front p {
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .flip-card-back {
+    background: #004d40; /* dark slate */
+    color: #ffdede; /* light coral text */
+    transform: rotateY(180deg);
+    text-align: left;
+    overflow-y: auto;
+    border-top: 4px solid #ff6f61;
+  }
+
+  .flip-card-back h3 {
+    font-weight: 600;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #ff6f61;
+    padding-bottom: 6px;
+  }
+
+  .flip-card-back ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+
+  .flip-card-back ul li,
+  .flip-card-back p {
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .flip-card-back::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .flip-card-back::-webkit-scrollbar-thumb {
+    background: #ff6f61; /* coral scrollbar */
+    border-radius: 10px;
+  }
+
+  @media(max-width: 600px) {
+    .flip-card-inner {
+      height: 400px;
+    }
+  }
+
+  /* Footer styling */
+  footer {
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  footer .icon {
+    width: 32px;
+    height: 32px;
+    fill: #ff6f61;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  footer .icon:hover {
+    transform: scale(1.2);
+    fill: #ffdede;
+  }
+
+</style>
+</head>
+<body>
+
+  <h1>Ashwini M</h1>
+  <p class="tagline">Information Technology Student | Web Developer | Tech Enthusiast</p>
+
+  <div class="grid">
+
+    <div class="flip-card" tabindex="0" aria-label="Personal Profile card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Personal Profile icon" />
+          <h2>Personal Profile</h2>
+          <p>Click to see details</p>
+        </div>
+        <div class="flip-card-back">
+          <h3>Details</h3>
+          <p><strong>Name:</strong> Ashwini M</p>
+          <p><strong>Address:</strong> E-14 Kootappalli Colony, Tiruchengode, Namakkal</p>
+          <p><strong>Age:</strong> 20</p>
+          <p><strong>Gender:</strong> Female</p>
+          <p><strong>Date of Birth:</strong> 19/10/2005</p>
+          <p><strong>Nationality:</strong> India</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" tabindex="0" aria-label="Hobbies and Interests card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front" style="justify-content:center;">
+          <!-- Palette SVG icon -->
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+            <path d="M32 2C15.4 2 2 15.4 2 32c0 13.3 9 24.5 21 27.6 5.6 1.5 8.9-1.9 11.3-5.3 2.6-3.7 5.5-8.1 8.3-10.5 2.6-2.1 4.9-3.7 7.7-3.7 2.5 0 4.5 2.1 4.5 4.6 0 4.3-4 9.6-11.1 11-4.8.9-8.6-.5-11.2-2.9-2-2-2.7-5.3-1.8-8.5.6-2.1 1.6-4.7 3.6-6.7 2.3-2.4 5.8-3.6 9.4-3.6 2.8 0 5.5 1.2 8.1 3.4 1.4 1.2 2.8 3.3 2.8 3.3l2.9-2.9s-1.6-3.6-3.6-5.6c-2.9-3-7.2-5.1-11.6-5.1z"/>
+          </svg>
+          <h2>Hobbies & Interests</h2>
+          <p>Click to see details</p>
+        </div>
+        <div class="flip-card-back">
+          <h3>Hobbies & Interests</h3>
+          <ul>
+            <li>Coding and Web Development</li>
+            <li>Reading Tech Blogs</li>
+            <li>Playing Badminton</li>
+            <li>Photography</li>
+            <li>Traveling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" tabindex="0" aria-label="Skills card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" alt="Skills icon" style="width: 90px; border-radius: 10px; margin-bottom: 20px;" />
+          <h2>Skills</h2>
+          <p>Click to see details</p>
+        </div>
+        <div class="flip-card-back">
+          <h3>Skills</h3>
+          <ul>
+            <li>Java</li>
+            <li>C</li>
+            <li>DBMS</li>
+            <li>UI/UX Design</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" tabindex="0" aria-label="Education card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="https://cdn-icons-png.flaticon.com/512/2683/2683479.png" alt="Education icon" style="width: 90px; border-radius: 10px; margin-bottom: 20px;" />
+          <h2>Education</h2>
+          <p>Click to see details</p>
+        </div>
+        <div class="flip-card-back">
+          <h3>Education</h3>
+          <p><strong>SSLC:</strong> KSR Matriculation Higher Secondary School</p>
+          <p><strong>HSC:</strong> KSR Matriculation Higher Secondary School</p>
+          <p><strong>Qualification:</strong> Bachelor of Technology Information Technology</p>
+          <p><strong>College Name:</strong> Velalar College of Engineering and Technology, Erode</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" tabindex="0" aria-label="Certifications card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front" style="justify-content:center;">
+          <!-- Graduation cap SVG icon -->
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+            <path d="M32 4L2 20l30 16 30-16L32 4zm0 23L9 20l23-12 23 12-23 7zm0 4l-3 3v11h6V34l-3-3z"/>
+          </svg>
+          <h2>Certifications</h2>
+          <p>Click to see details</p>
+        </div>
+        <div class="flip-card-back">
+          <h3>Certifications</h3>
+          <ul>
+            <li>Paper Presentation: Emerging Technologies in IT</li>
+            <li>Workshop: Advanced Web Development</li>
+            <li>Project: Smart Attendance System</li>
+            <li>Courses: Full Stack Web Development, Data Science</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" tabindex="0" aria-label="Languages card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front" style="justify-content:center;">
+          <!-- Speech bubble SVG icon -->
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+            <path d="M12 10h40v28H24l-12 12V10z"/>
+          </svg>
+          <h2>Languages</h2>
+          <p>Click to see details</p>
+        </div>
+        <div class="flip-card-back">
+          <h3>Languages</h3>
+          <ul>
+            <li>Tamil</li>
+            <li>English</li>
+            <li>Hindi</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer aria-label="Contact information">
+    <!-- Phone icon -->
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Phone" role="img" tabindex="0">
+      <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21 11.72 11.72 0 003.7.6 1 1 0 011 1v3.51a1 1 0 01-1 1A16 16 0 014 6a1 1 0 011-1h3.51a1 1 0 011 1 11.72 11.72 0 00.6 3.7 1 1 0 01-.21 1.11l-2.28 2.28z"/>
+    </svg>
+
+    <!-- Email icon -->
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Email" role="img" tabindex="0">
+      <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"/>
+    </svg>
+
+    <!-- LinkedIn icon -->
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="LinkedIn" role="img" tabindex="0">
+      <path d="M4.98 3.5C3.34 3.5 2 4.85 2 6.48c0 1.62 1.34 2.98 2.98 2.98s2.98-1.36 2.98-2.98c0-1.63-1.34-2.98-2.98-2.98zM2.5 20.5h5v-11h-5v11zM9.5 9.5v11h5v-5.75c0-3.12-4-2.87-4 0V20.5h5v-7c0-4.25-5-4.1-5 0V20.5z"/>
+    </svg>
+
+    <!-- GitHub icon -->
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="GitHub" role="img" tabindex="0">
+      <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.5v-1.69c-2.78.61-3.37-1.34-3.37-1.34-.45-1.13-1.1-1.44-1.1-1.44-.9-.62.07-.6.07-.6 1 .07 1.53 1.02 1.53 1.02.89 1.52 2.34 1.08 2.9.83.09-.64.35-1.08.64-1.33-2.22-.26-4.55-1.11-4.55-4.93 0-1.08.39-1.96 1.03-2.65-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.1c.85.004 1.7.115 2.5.338 1.9-1.3 2.74-1.02 2.74-1.02.56 1.4.2 2.45.1 2.71.64.69 1.03 1.57 1.03 2.65 0 3.83-2.34 4.67-4.57 4.92.36.31.68.93.68 1.88v2.79c0 .28.18.6.7.5A10 10 0 0022 12c0-5.52-4.48-10-10-10z"/>
+    </svg>
+  </footer>
+
+</body>
+</html>
+
+
