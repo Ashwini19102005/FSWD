@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Microblog</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: #eaeaea;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 260px;
+      background: #1c1c1c;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.4);
+    }
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #1DA1F2;
+    }
+    .sidebar button, .sidebar select {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .sidebar button {
+      background: #1DA1F2;
+      color: white;
+    }
+    .sidebar button:hover {
+      background: #0d8ddb;
+    }
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .header {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .composer {
+      background: #2b2b2b;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 70px;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 14px;
+      resize: none;
+    }
+    .char-count {
+      font-size: 12px;
+      text-align: right;
+      color: gray;
+      margin-top: 5px;
+    }
+    .composer button {
+      margin-top: 8px;
+      float: right;
+      background: #1DA1F2;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .composer button:hover {
+      background: #0d8ddb;
+    }
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .post {
+      background: #2b2b2b;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .post p {
+      margin: 0 0 8px 0;
+    }
+    .post small {
+      color: gray;
+      font-size: 12px;
+    }
+    .actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .actions button {
+      background: none;
+      border: none;
+      color: #1DA1F2;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .actions button.liked {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Accounts</h2>
+    <select id="userSelect"></select>
+    <button onclick="setUser()">Set Active</button>
+    <button onclick="newUser()">+ New User</button>
+    <h2>Quick Actions</h2>
+    <button onclick="clearData()">Clear All Data</button>
+    <button onclick="seedExample()">Seed Example</button>
+  </div>
+
+  <div class="main">
+    <div class="header">Mini Microblog</div>
+    <div class="composer">
+      <div id="userStatus">Not signed in</div>
+      <textarea id="postContent" maxlength="280" placeholder="What's happening?"></textarea>
+      <div class="char-count" id="charCount">0 / 280</div>
+      <button onclick="addPost()">Post</button>
+      <div style="clear:both"></div>
+    </div>
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <script>
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    let activeUser = localStorage.getItem("activeUser") || null;
+
+    function save() {
+      localStorage.setItem("users", JSON.stringify(users));
+      localStorage.setItem("posts", JSON.stringify(posts));
+      if (activeUser) localStorage.setItem("activeUser", activeUser);
+    }
+
+    function renderUsers() {
+      const sel = document.getElementById("userSelect");
+      sel.innerHTML = users.map(u => `<option value="${u}">${u}</option>`).join("");
+      if (activeUser) sel.value = activeUser;
+      document.getElementById("userStatus").innerText = activeUser ? "Signed in as " + activeUser : "Not signed in";
+    }
+
+    function renderFeed() {
+      const feed = document.getElementById("feed");
+      feed.innerHTML = "";
+      posts.slice().reverse().forEach((p,i) => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `<p>${p.text}</p><small>by ${p.user} · ${new Date(p.time).toLocaleString()}</small>
+                         <div class="actions">
+                           <button onclick="likePost(${i}, this)" class="${p.likes?.includes(activeUser)?'liked':''}">❤️ ${p.likes?.length||0}</button>
+                           ${p.user===activeUser?`<button onclick="deletePost(${i})">❌ Delete</button>`:""}
+                         </div>`;
+        feed.appendChild(div);
+      });
+    }
+
+    function newUser() {
+      const name = prompt("Enter new username:");
+      if (!name || users.includes(name)) return;
+      users.push(name);
+      activeUser = name;
+      save();
+      renderUsers();
+      renderFeed();
+    }
+
+    function setUser() {
+      const sel = document.getElementById("userSelect");
+      activeUser = sel.value;
+      save();
+      renderUsers();
+      renderFeed();
+    }
+
+    function addPost() {
+      if (!activeUser) return alert("Please sign in first");
+      const content = document.getElementById("postContent").value.trim();
+      if (!content) return;
+      posts.push({user: activeUser, text: content, time: Date.now(), likes: []});
+      document.getElementById("postContent").value = "";
+      document.getElementById("charCount").innerText = "0 / 280";
+      save();
+      renderFeed();
+    }
+
+    function likePost(i, btn) {
+      if (!activeUser) return;
+      if (!posts[i].likes) posts[i].likes = [];
+      if (posts[i].likes.includes(activeUser)) {
+        posts[i].likes = posts[i].likes.filter(u => u!==activeUser);
+      } else {
+        posts[i].likes.push(activeUser);
+      }
+      save();
+      renderFeed();
+    }
+
+    function deletePost(i) {
+      posts.splice(i,1);
+      save();
+      renderFeed();
+    }
+
+    function clearData() {
+      if (confirm("Clear all data?")) {
+        users=[]; posts=[]; activeUser=null;
+        localStorage.clear();
+        renderUsers();
+        renderFeed();
+      }
+    }
+
+    function seedExample() {
+      users = ["Alice","Bob","Charlie"];
+      posts = [
+        {user:"Alice",text:"Hello World!",time:Date.now()-500000,likes:[]},
+        {user:"Bob",text:"This is a test post.",time:Date.now()-300000,likes:["Alice"]},
+        {user:"Charlie",text:"Enjoying microblog!",time:Date.now()-100000,likes:[]}
+      ];
+      activeUser = "Alice";
+      save();
+      renderUsers();
+      renderFeed();
+    }
+
+    document.getElementById("postContent").addEventListener("input", function(){
+      document.getElementById("charCount").innerText = this.value.length + " / 280";
+    });
+
+    renderUsers();
+    renderFeed();
+  </script>
+</body>
+</html>
